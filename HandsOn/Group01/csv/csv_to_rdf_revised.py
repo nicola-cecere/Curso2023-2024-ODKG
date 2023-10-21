@@ -53,7 +53,6 @@ def add_classes_to_graph(g, nso):
     Total = nso.Total
     Year = nso.Year
     Month = nso.Month
-    Name = nso.Name  # Add the Name class
 
     # Zone
     g.add((Zone, RDF.type, RDFS.Class))
@@ -73,8 +72,6 @@ def add_classes_to_graph(g, nso):
     # Month
     g.add((Month, RDF.type, RDFS.Class))
 
-    # Name
-    g.add((Name, RDF.type, RDFS.Class))
 
 
 def add_properties_to_graph(g, nso):
@@ -90,7 +87,7 @@ def add_properties_to_graph(g, nso):
     referedTo = nso.referedTo
     hasYear = nso.hasYear
     hasMonth = nso.hasMonth
-    label = RDFS.label
+
 
     # Now, add property definitions to the graph:
 
@@ -149,10 +146,6 @@ def add_properties_to_graph(g, nso):
     g.add((hasMonth, RDFS.domain, nso.Total))
     g.add((hasMonth, RDFS.range, nso.Month))
 
-    # label
-    g.add((label, RDF.type, RDF.Property))  # Add the property definition
-    g.add((label, RDFS.domain, nso.Name))
-    g.add((label, RDFS.range, XSD.string))  # Assume Name is of type string
 
 
 def create_triples(df, g, nso):
@@ -165,7 +158,6 @@ def create_triples(df, g, nso):
             f"{nso}data/Total/{preprocess_for_uri(row['WasteType'])}_{preprocess_for_uri(row['District'])}_{preprocess_for_uri(row['Year'])}_{preprocess_for_uri(row['Month'])}")
         year_uri = rdflib.URIRef(f"{nso}data/Year/{preprocess_for_uri(row['Year'])}")
         month_uri = rdflib.URIRef(f"{nso}data/Month/{preprocess_for_uri(row['Month'])}")
-        name_uri = rdflib.URIRef(f"{nso}data/Name/{preprocess_for_uri(row['Name'])}")  # Add URI for Name
 
         """----------------------Data properties---------------------------------"""
 
@@ -181,8 +173,13 @@ def create_triples(df, g, nso):
 
         if not (district_uri, nso['districtID'], district_id_literal) in g:
             g.add((district_uri, nso['districtID'], district_id_literal))
-            g.add((district_uri, RDFS.label, Literal(f"District {row['District']}")))
-            g.add((district_uri, RDFS.label, Literal(row['Name'], datatype=XSD.string)))  # Use RDFS.label for Name
+
+        district_name_literal = Literal(row['Name'], datatype=XSD.string)
+
+        if not (district_uri, nso['districtName'], district_name_literal) in g:
+            g.add((district_uri, nso['districtName'], district_name_literal))
+            g.add((district_uri, RDFS.label, Literal(f"District {row['District']}", datatype=XSD.string)))
+
 
         # WasteType data properties
         wasteType_literal = Literal(row['WasteType'], datatype=XSD.string)
@@ -199,14 +196,17 @@ def create_triples(df, g, nso):
         if not (total_uri, nso['value'], None) in g:
             g.add((total_uri, nso['value'], total_value_literal))
             g.add((total_uri, RDFS.label, total_label_literal))
-            g.add((total_uri, nso['hasYear'], Literal(row['Year'], datatype=XSD.integer)))
+            g.add((total_uri, nso['hasYear'], year_uri))
             g.add((total_uri, nso['hasMonth'], month_uri))
 
         # Year data properties
         year_literal = Literal(row['Year'], datatype=XSD.integer)
 
-        if not (year_uri, RDFS.label, year_literal) in g:
+
+        if not (year_uri, RDF.type, nso['Year']) in g.triples((year_uri, RDF.type, None)):
+            g.add((year_uri, RDF.type, nso['Year']))
             g.add((year_uri, RDFS.label, year_literal))
+
 
         # Month data properties
         month_label = Literal(row['Month'], datatype=XSD.string)
@@ -215,11 +215,6 @@ def create_triples(df, g, nso):
             g.add((month_uri, RDF.type, nso['Month']))
             g.add((month_uri, RDFS.label, month_label))
 
-        # Name data properties
-        name_value_literal = Literal(row['Name'], datatype=XSD.string)  # Use RDFS.label for Name
-
-        if not (name_uri, RDFS.label, name_value_literal) in g:  # Use RDFS.label for Name
-            g.add((name_uri, RDFS.label, name_value_literal))  # Use RDFS.label for Name
 
         """----------------------Entity relationships---------------------------------"""
 
@@ -239,6 +234,8 @@ def create_triples(df, g, nso):
         g.add((total_uri, RDF.type, nso['Total']))
         g.add((total_uri, nso['referedTo'], district_uri))
         g.add((total_uri, nso['hasYear'], year_uri))
+        g.add((total_uri, nso['hasMonth'], month_uri))
+
 
         # Year relationships
         g.add((year_uri, RDF.type, nso['Year']))
@@ -246,8 +243,6 @@ def create_triples(df, g, nso):
         # Month relationships
         g.add((month_uri, RDF.type, nso['Month']))
 
-        # Name relationships
-        g.add((name_uri, RDF.type, nso['Name']))
 
 
 def main():
