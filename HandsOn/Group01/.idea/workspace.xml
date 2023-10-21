@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17573f33-eab7-4eeb-905c-5166aa949c9e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/csv/Residuos_2021_2023-updated_3.ttl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/csv/csv_to_rdf_revised.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv/csv_to_rdf_revised.py" beforeDir="false" afterPath="$PROJECT_DIR$/csv/csv_to_rdf_revised.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +68,7 @@
       <workItem from="1697814870200" duration="751000" />
       <workItem from="1697815652321" duration="20518000" />
       <workItem from="1697843203946" duration="8355000" />
-      <workItem from="1697887406317" duration="3412000" />
+      <workItem from="1697887406317" duration="4195000" />
     </task>
     <servers />
   </component>

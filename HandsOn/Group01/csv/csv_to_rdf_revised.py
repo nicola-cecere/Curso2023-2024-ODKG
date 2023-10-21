@@ -139,7 +139,7 @@ def add_properties_to_graph(g, nso):
     # hasYear
     g.add((hasYear, RDF.type, RDF.Property))
     g.add((hasYear, RDFS.domain, nso.Total))
-    g.add((hasYear, RDFS.range, XSD.integer))
+    g.add((hasYear, RDFS.range, nso.Year))
 
     # hasMonth
     g.add((hasMonth, RDF.type, RDF.Property))

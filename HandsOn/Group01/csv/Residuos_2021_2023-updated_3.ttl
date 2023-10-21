@@ -74,7 +74,7 @@ nso:hasTotal a rdf:Property ;
 
 nso:hasYear a rdf:Property ;
     rdfs:domain nso:Total ;
-    rdfs:range xsd:integer .
+    rdfs:range nso:Year .
 
 nso:referedTo a rdf:Property ;
     rdfs:domain nso:Total ;
